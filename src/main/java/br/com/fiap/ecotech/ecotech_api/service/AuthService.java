@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-/*
- * Regras de registro e login:
- * - cadastro: impede e-mail duplicado e salva senha com hash
- * - login: valida senha e retorna JWT com claims de id/role
+/**
+ * Regras de autenticação:
+ * - register: cria usuário, salva senha com hash e já gera JWT.
+ * - login   : valida senha e devolve JWT.
  */
 @Service
 @RequiredArgsConstructor
@@ -34,12 +34,13 @@ public class AuthService {
         User u = User.builder()
                 .name(req.name())
                 .email(req.email())
-                .password(encoder.encode(req.password()))
-                .role(Role.USER)
+                .password(encoder.encode(req.password())) // nunca salvar senha crua
+                .role(Role.USER)                          // default USER
                 .build();
 
         userRepo.save(u);
 
+        // Gero JWT com claims úteis (id/role) pro app não precisar reconsultar
         String token = jwt.generateToken(u.getEmail(), Map.of(
                 "id", u.getId(),
                 "role", u.getRole().name()

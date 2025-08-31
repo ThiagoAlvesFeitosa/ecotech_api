@@ -6,6 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+/**
+ * Repositório das "entradas de pontos" (positivas/negativas).
+ *
+ * sumPointsByUser(u) -> retorna o saldo total de pontos do usuário.
+ */
 
 public interface PointEntryRepository extends JpaRepository<PointEntry, Long> {
 
